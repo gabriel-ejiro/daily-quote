@@ -1,5 +1,11 @@
 name: Deploy Daily Quote (Terraform)
 
+- name: Configure AWS via OIDC
+  uses: aws-actions/configure-aws-credentials@v4
+  with:
+    role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+    aws-region: ${{ env.AWS_REGION }}
+
 on:
   push:
     branches: [ "main" ]
