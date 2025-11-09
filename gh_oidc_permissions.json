@@ -1,0 +1,51 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    { "Effect": "Allow",
+      "Action": [
+        "apigateway:GET","apigateway:POST","apigateway:PUT","apigateway:PATCH","apigateway:DELETE"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "apigatewayv2:*"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "lambda:*"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "dynamodb:*"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "events:*"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents","logs:DescribeLogGroups","logs:DescribeLogStreams","logs:DeleteLogGroup"
+      ],
+      "Resource": "*"
+    },
+    { "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole","iam:DeleteRole","iam:PassRole",
+        "iam:CreatePolicy","iam:DeletePolicy","iam:AttachRolePolicy","iam:DetachRolePolicy","iam:PutRolePolicy","iam:DeleteRolePolicy","iam:UpdateAssumeRolePolicy","iam:GetRole","iam:GetPolicy","iam:GetPolicyVersion","iam:CreatePolicyVersion","iam:ListPolicyVersions","iam:DeletePolicyVersion"
+      ],
+      "Resource": [
+        "arn:aws:iam::ACCOUNT_ID:role/daily-quote-*",
+        "arn:aws:iam::ACCOUNT_ID:policy/daily-quote-*"
+      ]
+    }
+  ]
+}
