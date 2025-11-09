@@ -1,0 +1,58 @@
+name: Deploy Daily Quote (Terraform)
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "terraform/**"
+      - "lambda/**"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # for OIDC
+      contents: read
+
+    env:
+      AWS_REGION: eu-north-1
+      TF_IN_AUTOMATION: "true"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_OIDC_ROLE }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Optional: export backend bucket/table as env and template in
+      # If you hard-coded backend values in main.tf, skip this step.
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        working-directory: terraform
+        run: terraform plan -input=false -out=tfplan
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        working-directory: terraform
+        run: terraform apply -input=false -auto-approve tfplan
+
+      - name: Output API URL
+        working-directory: terraform
+        run: terraform output api_base_url
