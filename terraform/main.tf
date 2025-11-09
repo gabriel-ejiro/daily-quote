@@ -1,12 +1,5 @@
 terraform {
   required_version = ">= 1.6.0"
-  backend "s3" {
-    bucket         = "REPLACE_WITH_TF_BUCKET"
-    key            = "daily-quote/terraform.tfstate"
-    region         = "eu-north-1"
-    dynamodb_table = "REPLACE_WITH_LOCK_TABLE"
-    encrypt        = true
-  }
   required_providers {
     aws     = { source = "hashicorp/aws", version = ">= 5.0" }
     archive = { source = "hashicorp/archive", version = ">= 2.4.0" }
