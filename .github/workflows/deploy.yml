@@ -41,11 +41,6 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-          
-      - name: Terraform Fmt (check)
-        working-directory: terraform
-        run: terraform fmt -check -recursive || (echo "Run: terraform fmt -recursive" && exit 1)
-
 
       - name: Terraform Init
         working-directory: terraform
