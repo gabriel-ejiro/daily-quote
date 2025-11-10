@@ -12,7 +12,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write      # required for OIDC
+      id-token: write
       contents: read
 
     env:
@@ -20,12 +20,6 @@ jobs:
       TF_IN_AUTOMATION: "true"
 
     steps:
-      - name: Show context (debug)
-        run: |
-          echo "ref=$GITHUB_REF"
-          echo "repo=$GITHUB_REPOSITORY"
-          echo "actor=$GITHUB_ACTOR"
-
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -46,13 +40,13 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # ---- State restore (no S3 backend) ----
+      # --- Restore state (first run has none; don't fail) ---
       - name: Restore Terraform state
         uses: actions/download-artifact@v4
         with:
           name: terraform-state
           path: terraform
-        continue-on-error: true  # first run won't have it
+        continue-on-error: true
 
       - name: Terraform fmt (auto-fix)
         working-directory: terraform
@@ -62,25 +56,37 @@ jobs:
         working-directory: terraform
         run: terraform init -input=false
 
-      # ---- Import any pre-existing resources so plan won't try to re-create them ----
-      - name: Terraform import existing resources (idempotent)
+      # --- Import resources that already exist (idempotent) ---
+      - name: Terraform import existing resources
         working-directory: terraform
         shell: bash
         run: |
           set -euo pipefail
-          # Import DynamoDB table if not in state
+
+          # Import DynamoDB table (if not in state)
           if ! terraform state show aws_dynamodb_table.quotes >/dev/null 2>&1; then
             echo "[import] aws_dynamodb_table.quotes -> daily-quote-table"
             terraform import aws_dynamodb_table.quotes daily-quote-table || true
           fi
-          # Import IAM role for the lambdas if not in state
+
+          # Import IAM role (if not in state)
           if ! terraform state show aws_iam_role.lambda_role >/dev/null 2>&1; then
             echo "[import] aws_iam_role.lambda_role -> daily-quote-lambda-role"
             terraform import aws_iam_role.lambda_role daily-quote-lambda-role || true
           fi
-          # If you kept the Resource Groups group and it already exists, import it too:
+
+          # Import IAM managed policy (if it already exists)
+          if ! terraform state show aws_iam_policy.lambda_policy >/dev/null 2>&1; then
+            ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+            POL_ARN="arn:aws:iam::${ACCOUNT_ID}:policy/daily-quote-lambda-policy"
+            if aws iam get-policy --policy-arn "$P_ARN" >/dev/null 2>&1; then
+              echo "[import] aws_iam_policy.lambda_policy -> $POL_ARN"
+              terraform import aws_iam_policy.lambda_policy "$POL_ARN" || true
+            fi
+          fi
+
+          # If you kept the Resource Groups group and it exists, import it too:
           # if ! terraform state show aws_resourcegroups_group.rg >/dev/null 2>&1; then
-          #   echo "[import] aws_resourcegroups_group.rg -> daily-quote-rg"
           #   terraform import aws_resourcegroups_group.rg daily-quote-rg || true
           # fi
 
@@ -106,3 +112,4 @@ jobs:
       - name: Output API URL
         working-directory: terraform
         run: terraform output api_base_url
+
