@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-
 locals {
   name        = var.project
   table_name  = "${var.project}-table"
@@ -46,7 +45,6 @@ data "aws_iam_policy_document" "assume" {
     actions = ["sts:AssumeRole"]
   }
 }
-
 
 resource "aws_iam_role" "lambda_role" {
   name               = "${local.name}-lambda-role"
@@ -137,8 +135,6 @@ resource "aws_lambda_function" "get" {
 # -------------------------
 # EventBridge schedule → fetch_daily
 # -------------------------
-# cron(Minutes Hours Day-of-month Month Day-of-week Year [optional])
-# Example: 0 8 * * ? *  == 08:00 UTC daily
 resource "aws_cloudwatch_event_rule" "daily" {
   name                = "${local.name}-daily"
   schedule_expression = "cron(${var.schedule_utc_minute} ${var.schedule_utc_hour} * * ? *)"
@@ -194,16 +190,3 @@ resource "aws_lambda_permission" "allow_apigw" {
   source_arn    = "${aws_apigatewayv2_api.http.execution_arn}/*/*"
 }
 
-# -------------------------
-# Tags & outputs
-# -------------------------
-resource "aws_resourcegroups_group" "rg" {
-  name = "${local.name}-rg"
-  resource_query {
-    query = jsonencode({
-      ResourceTypeFilters = ["AWS::AllSupported"]
-      TagFilters = [{ Key = "Project", Values = [local.name] }]
-    })
-  }
-  tags = { Project = local.name }
-}
