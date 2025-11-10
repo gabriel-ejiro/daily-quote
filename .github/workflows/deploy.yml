@@ -1,28 +1,27 @@
 name: Deploy Daily Quote (Terraform)
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - "terraform/**"
-      - "lambda/**"
-  workflow_dispatch:
+  push:            # trigger on any push (simpler while debugging)
+  workflow_dispatch:  # allows manual "Run workflow" button
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # OIDC
+      id-token: write
       contents: read
 
     env:
       AWS_REGION: eu-north-1
       TF_IN_AUTOMATION: "true"
-      # If you use S3 backend, define these as repo variables and uncomment init flags below:
-      # TF_BACKEND_BUCKET: ${{ vars.TF_BACKEND_BUCKET }}
-      # TF_LOCK_TABLE: ${{ vars.TF_LOCK_TABLE }}
 
     steps:
+      - name: Show GitHub context (debug)
+        run: |
+          echo "ref=$GITHUB_REF"
+          echo "sha=$GITHUB_SHA"
+          echo "repo=$GITHUB_REPOSITORY"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -44,15 +43,8 @@ jobs:
 
       - name: Terraform Init
         working-directory: terraform
-        run: |
-          terraform init -input=false
-          # If using S3 backend, replace the line above with:
-          # terraform init -input=false \
-          #   -backend-config="bucket=${TF_BACKEND_BUCKET}" \
-          #   -backend-config="key=daily-quote/terraform.tfstate" \
-          #   -backend-config="region=${AWS_REGION}" \
-          #   -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
-          #   -backend-config="encrypt=true"
+        run: terraform init -input=false
+        # If you use S3 backend, replace with init flags for bucket/table/region.
 
       - name: Terraform Validate
         working-directory: terraform
@@ -63,10 +55,10 @@ jobs:
         run: terraform plan -input=false -out=tfplan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
         working-directory: terraform
         run: terraform apply -input=false -auto-approve tfplan
 
       - name: Output API URL
         working-directory: terraform
         run: terraform output api_base_url
+
