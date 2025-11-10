@@ -1,0 +1,10 @@
+name: Hello CI
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "It works! ref=$GITHUB_REF sha=$GITHUB_SHA"
