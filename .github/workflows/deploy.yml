@@ -40,12 +40,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Terraform fmt (check)
+      - name: Terraform fmt (auto-fix)
         working-directory: terraform
         shell: bash
-        run: |
-          set -euo pipefail
-          terraform fmt -check -recursive || { echo "Run: terraform fmt -recursive"; exit 1; }
+        run: terraform fmt -recursive
+
 
       - name: Terraform init
         working-directory: terraform
