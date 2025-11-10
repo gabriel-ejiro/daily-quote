@@ -1,20 +1,3 @@
-name: Deploy Daily Quote (Terraform)
-
-on:
-  push:
-  workflow_dispatch:
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-
-    env:
-      AWS_REGION: eu-north-1
-      TF_IN_AUTOMATION: "true"
-
     steps:
       - name: Show context (debug)
         run: |
@@ -40,15 +23,36 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      # NEW: bring back local state (first run may not have it)
+      - name: Restore Terraform state
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-state
+          path: terraform
+        continue-on-error: true
+
       - name: Terraform fmt (auto-fix)
         working-directory: terraform
-        shell: bash
         run: terraform fmt -recursive
-
 
       - name: Terraform init
         working-directory: terraform
         run: terraform init -input=false
+
+      # NEW: import pre-existing resources so plan won't try to create them again
+      - name: Terraform import existing resources (idempotent)
+        working-directory: terraform
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! terraform state show aws_dynamodb_table.quotes >/dev/null 2>&1; then
+            echo "Importing aws_dynamodb_table.quotes ..."
+            terraform import aws_dynamodb_table.quotes daily-quote-table || true
+          fi
+          if ! terraform state show aws_iam_role.lambda_role >/dev/null 2>&1; then
+            echo "Importing aws_iam_role.lambda_role ..."
+            terraform import aws_iam_role.lambda_role daily-quote-lambda-role || true
+          fi
 
       - name: Terraform validate
         working-directory: terraform
@@ -62,6 +66,15 @@ jobs:
         working-directory: terraform
         run: terraform apply -input=false -auto-approve tfplan
 
+      # NEW: persist state for next run
+      - name: Save Terraform state
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-state
+          path: terraform/terraform.tfstate
+
       - name: Output API URL
         working-directory: terraform
         run: terraform output api_base_url
+
