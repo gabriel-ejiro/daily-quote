@@ -26,7 +26,7 @@ jobs:
 
       - name: Validate role secret
         run: |
-          test -n '${{ secrets.AWS_ROLE_ARN }}' || (echo "Missing secret AWS_ROLE_ARN"; exit 1)
+          test -n '${{ secrets.AWS_ROLE_ARN }}' || { echo "Missing secret AWS_ROLE_ARN"; exit 1; }
           echo "Will assume: ${{ secrets.AWS_ROLE_ARN }}"
 
       - name: Setup Terraform
@@ -42,7 +42,10 @@ jobs:
 
       - name: Terraform fmt (check)
         working-directory: terraform
-        run: terraform fmt -check -recursive || (echo "Run: terraform fmt -recursive" && exit 1)
+        shell: bash
+        run: |
+          set -euo pipefail
+          terraform fmt -check -recursive || { echo "Run: terraform fmt -recursive"; exit 1; }
 
       - name: Terraform init
         working-directory: terraform
