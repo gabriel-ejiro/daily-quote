@@ -1,31 +1,26 @@
-import json, os, urllib.request, datetime, time
-import boto3
+import os, json, boto3, datetime, urllib.request
 
-DDB_TABLE = os.environ["TABLE_NAME"]
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table(DDB_TABLE)
+table = dynamodb.Table(os.environ["TABLE_NAME"])
 
-def _fetch_quote():
-    # Public API, no key required
-    url = "https://api.quotable.io/random"
-    with urllib.request.urlopen(url, timeout=10) as resp:
+QUOTABLE_URL = "https://api.quotable.io/random"  # simple public API
+
+def fetch_quote():
+    # tiny stdlib HTTP call (no 'requests' dependency)
+    with urllib.request.urlopen(QUOTABLE_URL, timeout=10) as resp:
         data = json.loads(resp.read().decode("utf-8"))
-    # Normalize fields
-    return {
-        "text": data.get("content"),
-        "author": data.get("author"),
-        "source": "quotable.io",
-    }
+        # quotable returns: {'_id', 'content', 'author', ...}
+        return data.get("content"), data.get("author")
 
 def handler(event, context):
-    today = datetime.datetime.utcnow().date().isoformat()  # YYYY-MM-DD (UTC)
-    q = _fetch_quote()
-    item = {
-        "day": today,
-        "text": q["text"],
-        "author": q["author"],
-        "source": q["source"],
-        "updatedAt": int(time.time())
-    }
-    table.put_item(Item=item)
-    return {"statusCode": 200, "body": json.dumps({"saved": today})}
+    day = datetime.datetime.utcnow().date().isoformat()
+    try:
+        quote, author = fetch_quote()
+        if not quote:
+            raise RuntimeError("No quote returned from upstream")
+        table.put_item(Item={"day": day, "quote": quote, "author": author or "Unknown"})
+        return {"ok": True, "day": day}
+    except Exception as e:
+        # Log and surface a minimal message (EventBridge will just log it)
+        print("fetch_daily error:", repr(e))
+        return {"ok": False, "error": str(e), "day": day}
