@@ -2,7 +2,12 @@ name: Deploy Daily Quote (Terraform)
 
 on:
   push:
-  workflow_dispatch:
+    branches: [ "main" ]          # only trigger on main branch
+    paths:
+      - 'terraform/**'            # only if Terraform files change
+      - 'lambda/**'               # or Lambda code changes
+  workflow_dispatch:               # also allow manual "Run workflow"
+
 
 concurrency:
   group: deploy-daily-quote
