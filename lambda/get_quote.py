@@ -1,7 +1,17 @@
-import os, json, boto3, datetime
+import os
+import json
+import boto3
+import datetime
+from decimal import Decimal
 
 dynamodb = boto3.resource("dynamodb")
-table = dynamodb.Table(os.environ["TABLE_NAME"])
+
+# Custom JSON encoder so DynamoDB Decimals don't break json.dumps
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super().default(obj)
 
 def _resp(status, body):
     return {
@@ -10,21 +20,36 @@ def _resp(status, body):
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*"
         },
-        "body": json.dumps(body, ensure_ascii=False)
+        "body": json.dumps(body, cls=DecimalEncoder, ensure_ascii=False)
     }
 
 def handler(event, context):
-    # use UTC date, e.g. "2025-11-14"
+    # 1) Check env var
+    table_name = os.environ.get("TABLE_NAME")
+    if not table_name:
+        # This would otherwise crash with a None table
+        return _resp(500, {"message": "TABLE_NAME env var is missing on Lambda"})
+
+    table = dynamodb.Table(table_name)
     today = datetime.datetime.utcnow().date().isoformat()
 
     try:
-        r = table.get_item(Key={"day": today})
-        item = r.get("Item")
+        # 2) Try to read today's item
+        result = table.get_item(Key={"day": today})
+        item = result.get("Item")
+
         if not item:
-            # Graceful fallback for first day / not yet fetched
+            # Graceful behaviour when no quote yet
             return _resp(404, {"message": "No quote stored for today yet. Try again in a minute."})
-        # Expecting item like {"day":"YYYY-MM-DD","quote":"...","author":"..."}
-        return _resp(200, {"day": item["day"], "quote": item.get("quote"), "author": item.get("author")})
+
+        # Defensive access
+        return _resp(200, {
+            "day": item.get("day", today),
+            "quote": item.get("quote"),
+            "author": item.get("author", "Unknown")
+        })
+
     except Exception as e:
-        # Never let exceptions bubble to API Gateway
+        # Log full details, but return simple error
+        print("ERROR in get_quote:", repr(e))
         return _resp(500, {"message": "Error reading quote", "detail": str(e)})
