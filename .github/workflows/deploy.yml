@@ -2,11 +2,11 @@ name: Deploy Daily Quote (Terraform)
 
 on:
   push:
-    branches: [ "main" ]          # only trigger on main branch
+    branches: [ "main" ]
     paths:
-      - 'terraform/**'            # only if Terraform files change
-      - 'lambda/**'               # or Lambda code changes
-  workflow_dispatch:               # also allow manual "Run workflow"
+      - 'terraform/**'
+      - 'lambda/**'
+  workflow_dispatch:
 
 concurrency:
   group: deploy-daily-quote
@@ -31,7 +31,7 @@ jobs:
         shell: bash
         run: |
           test -n '${{ secrets.AWS_ROLE_ARN }}' || { echo "Missing secret AWS_ROLE_ARN"; exit 1; }
-          echo "Will assume: ${{ secrets.AWS_ROLE_ARN }}"
+          echo "Assuming: ${{ secrets.AWS_ROLE_ARN }}"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -44,7 +44,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # ---- Cache local backend state & dirs (no artifacts) ----
+      # Keep local backend state across runs (no S3 backend needed)
       - name: Cache Terraform state & dirs
         uses: actions/cache@v4
         with:
@@ -64,7 +64,7 @@ jobs:
         working-directory: terraform
         run: terraform init -input=false
 
-      # --- Import resources that already exist (idempotent) ---
+      # Import any existing AWS resources so apply won't collide
       - name: Terraform import existing resources
         working-directory: terraform
         shell: bash
@@ -105,6 +105,18 @@ jobs:
             terraform import aws_lambda_function.get daily-quote-get || true
           fi
 
+          # Lambda permission: EventBridge -> fetch
+          if ! terraform state show aws_lambda_permission.allow_events >/dev/null 2>&1; then
+            echo "[import] aws_lambda_permission.allow_events -> daily-quote-fetch/AllowExecutionFromEventBridge"
+            terraform import aws_lambda_permission.allow_events daily-quote-fetch/AllowExecutionFromEventBridge || true
+          fi
+
+          # Lambda permission: API Gateway -> get
+          if ! terraform state show aws_lambda_permission.allow_apigw >/dev/null 2>&1; then
+            echo "[import] aws_lambda_permission.allow_apigw -> daily-quote-get/AllowAPIGatewayInvoke"
+            terraform import aws_lambda_permission.allow_apigw daily-quote-get/AllowAPIGatewayInvoke || true
+          fi
+
       - name: Terraform validate
         working-directory: terraform
         run: terraform validate
@@ -116,6 +128,8 @@ jobs:
       - name: Terraform apply
         working-directory: terraform
         run: terraform apply -input=false -auto-approve tfplan
+      - name: Seed today’s quote (invoke fetch)
+        run: aws lambda invoke --function-name daily-quote-fetch --payload '{}' --region ${{ env.AWS_REGION }} /dev/stdout
 
       - name: Output API URL
         working-directory: terraform
