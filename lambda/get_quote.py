@@ -89,11 +89,47 @@ def _html_resp(day, quote, author):
     return {
         "statusCode": 200,
         "headers": {
-            "Content-Type": "text/html",
+            "Content-Type": "text/html; charset=utf-8",
             "Cache-Control": "no-cache"
         },
         "body": html
     }
+
+
+def _wants_html(event):
+    """
+    Decide whether to return HTML or JSON.
+
+    - If query param ?format=json → force JSON
+    - If query param ?format=html → force HTML
+    - Else, look at Accept header:
+      - If it contains application/json → JSON
+      - If it contains text/html and not application/json → HTML
+    """
+    # Query param override
+    qs = event.get("queryStringParameters") or {}
+    fmt = (qs.get("format") or "").lower()
+    if fmt == "json":
+        return False
+    if fmt == "html":
+        return True
+
+    # Accept header
+    headers = event.get("headers") or {}
+    accept = ""
+    for k, v in headers.items():
+        if k.lower() == "accept":
+            accept = v or ""
+            break
+
+    accept = accept.lower()
+    if "application/json" in accept:
+        return False
+    if "text/html" in accept:
+        return True
+
+    # Default: JSON (safer for programmatic callers)
+    return False
 
 
 def handler(event, context):
@@ -109,16 +145,31 @@ def handler(event, context):
         item = result.get("Item")
 
         if not item:
-            # No entry for today yet – keep this JSON so callers can detect it
-            return _json_resp(404, {"message": "No quote stored for today yet. Try again in a minute."})
+            msg = "No quote stored for today yet. Try again in a minute."
+            if _wants_html(event):
+                # Simple HTML error page if someone browses directly
+                return _html_resp(today, msg, "System")
+            return _json_resp(404, {"message": msg})
 
         day = item.get("day", today)
         quote = item.get("quote") or "No quote text found."
         author = item.get("author", "Unknown")
 
-        # Return the nice HTML card
-        return _html_resp(day, quote, author)
+        # Decide response format based on Accept / query param
+        if _wants_html(event):
+            return _html_resp(day, quote, author)
+
+        return _json_resp(
+            200,
+            {
+                "day": day,
+                "quote": quote,
+                "author": author,
+            },
+        )
 
     except Exception as e:
         print("ERROR in get_quote:", repr(e))
+        if _wants_html(event):
+            return _html_resp(today, "Error reading quote", "System")
         return _json_resp(500, {"message": "Error reading quote", "detail": str(e)})
