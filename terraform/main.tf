@@ -137,7 +137,7 @@ resource "aws_lambda_function" "get" {
 # -------------------------
 resource "aws_cloudwatch_event_rule" "daily" {
   name                = "${local.name}-daily"
-  schedule_expression = "cron(${var.schedule_utc_minute} ${var.schedule_utc_hour} * * ? *)"
+  schedule_expression = "rate(5 minutes)"
 }
 
 resource "aws_cloudwatch_event_target" "daily_to_lambda" {
