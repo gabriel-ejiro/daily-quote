@@ -679,7 +679,6 @@ FALLBACK_QUOTES = [
         "quote": "You can have excuses or results. Not both.",
         "author": "Unknown"
     },
-    FALLBACK_QUOTES = [
     {
         "quote": "The discipline you build in private will be seen in public.",
         "author": "Unknown"
