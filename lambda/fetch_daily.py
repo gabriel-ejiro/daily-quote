@@ -312,9 +312,6 @@ FALLBACK_QUOTES = [
         "author": "Christopher Reeve"
     },
 
-    # -------------------------------------------------------
-    #   125 NEW QUOTES (ADDED NOW) to reach EXACTLY 200
-    # -------------------------------------------------------
     {
         "quote": "Your habits will decide your future.",
         "author": "Jack Canfield"
@@ -683,9 +680,415 @@ FALLBACK_QUOTES = [
         "quote": "You can have excuses or results. Not both.",
         "author": "Unknown"
     },
+    FALLBACK_QUOTES = [
+    # ... your existing quotes ...,
+
+    # -------------------------------------------------------
+    #   100 MORE FALLBACK QUOTES (APPEND THESE)
+    # -------------------------------------------------------
     {
-        "quote": "Grow through what you go through.",
+        "quote": "The discipline you build in private will be seen in public.",
         "author": "Unknown"
+    },
+    {
+        "quote": "Success is a daily decision, not a one-time event.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "If you don’t sacrifice for what you want, what you want becomes the sacrifice.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is the by-product of your daily routine.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your future is hidden in your daily habits.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is doing what you said you would do long after the mood has left.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You don’t have to be extreme, just consistent.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Small disciplines repeated with consistency every day lead to great achievements.",
+        "author": "John C. Maxwell"
+    },
+    {
+        "quote": "Dreams don’t work unless you do.",
+        "author": "John C. Maxwell"
+    },
+    {
+        "quote": "Your daily choices are carving your destiny.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The best project you’ll ever work on is yourself.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is focusing on what you can control and ignoring what you can’t.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Don’t break a promise you made to yourself.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You don’t get what you wish for. You get what you work for.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is nothing but a habit of winning the small battles.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is the sum of what you do, every day, even when no one is watching.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is choosing progress over comfort.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Be stubborn about your goals and flexible about your methods.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The results you want tomorrow start with the choices you make today.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Motivation is the spark. Discipline is the engine.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is doing what you need to do, even when you don’t feel like doing it.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is a form of self-respect.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You can’t be committed to your dream and your comfort zone at the same time.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your grind must be louder than your excuses.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is earned when no one is clapping.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The more disciplined you are, the less you need motivation.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every time you delay your goals, you’re teaching yourself that they don’t matter.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You are not stuck. You are just comfortable.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is the silent architect of greatness.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Hard choices, easy life. Easy choices, hard life.",
+        "author": "Jerzy Gregorek"
+    },
+    {
+        "quote": "There is no growth in your comfort zone and no comfort in your growth zone.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Be the person who follows through.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You can’t control the outcome, but you can always control the effort.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline today is relief tomorrow.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "If you want to change your life, change your priorities.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every disciplined effort has multiple rewards.",
+        "author": "Jim Rohn"
+    },
+    {
+        "quote": "You won’t always feel like it. Do it anyway.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The gap between your dreams and your reality is called action.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Live today like someone is depending on you tomorrow.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The harder you are on yourself, the easier life is on you.",
+        "author": "Zig Ziglar"
+    },
+    {
+        "quote": "Discipline is simply choosing between what you want now and what you want most.",
+        "author": "Abraham Lincoln"
+    },
+    {
+        "quote": "Your level of success rarely exceeds your level of self-discipline.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your excuses will always be there. Opportunity won’t.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Either you control your day or your day controls you.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success comes from doing what is right, not what is easy.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You don’t grow when you are comfortable.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is choosing your long-term happiness over your short-term impulses.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every sacrifice you make for your goals is an investment in your future.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Remind yourself why you started and keep going.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is doing the boring work that greatness requires.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Never let your feelings decide your future.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The secret of your future is hidden in your daily routine.",
+        "author": "Mike Murdock"
+    },
+    {
+        "quote": "You can’t be both distracted and successful.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You are not tired. You are unchallenged.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "When you feel like stopping, think about why you started.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is remembering what you want.",
+        "author": "David Campbell"
+    },
+    {
+        "quote": "You can’t pour from an empty cup. Take care of yourself and keep showing up.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The person you will be in five years depends on what you do every day.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success isn’t owned. It’s leased, and rent is due every day.",
+        "author": "J.J. Watt"
+    },
+    {
+        "quote": "You are always one decision away from a different life.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every day you have two choices: step forward into growth or step back into safety.",
+        "author": "Abraham Maslow"
+    },
+    {
+        "quote": "Discipline is the art of keeping your commitments to yourself.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Stop starting over. Keep going.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You deserve the results of your effort, not your intentions.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your daily routine is either building you or breaking you.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Don’t complain about results you didn’t work for.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is doing your best even when you feel your worst.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You’ll be surprised at what you can accomplish if you simply don’t give up.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The time will pass anyway; you might as well use it to build the life you want.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "If it matters to you, you will find a way. If not, you will find an excuse.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "What you tolerate today becomes your standard tomorrow.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is turning 'one day' into 'day one'.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Show up. Some days that’s the victory.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The distance between your dreams and reality is called consistent action.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your life will not change until you change something you do daily.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is the greatest form of self-love.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "If you can’t handle the small responsibilities, you’re not ready for the big ones.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is created when your desire to change is greater than your desire to stay the same.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You will never regret choosing discipline over distraction.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Winning is a habit. Unfortunately, so is losing.",
+        "author": "Vince Lombardi"
+    },
+    {
+        "quote": "Discipline separates who you are from who you could be.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The quality of your future is determined by the discipline of your present.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You can outwork a lot of problems.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Don’t let a bad day make you forget how far you’ve come.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is the difference between being capable and being consistent.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Some quit because they’re tired. Others keep going because they’re building something.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your habits either serve your future or sabotage it.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Success is staying loyal to what you said you were going to do.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The days you don’t want to are the days it matters most.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your work ethic is your greatest competitive advantage.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is closing the gap between your potential and your performance.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Stop negotiating with your goals.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "You won’t always be the most talented, but you can always be the most disciplined.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Long-term success is built on short-term sacrifices.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Discipline is choosing not to give up when it would be easier to do so.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every bit of effort compounds. Keep going.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "One hour of discipline can move you further than weeks of intention.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Your destiny is shaped by what you do repeatedly, not occasionally.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "The more you respect your own word, the stronger your discipline becomes.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Self-discipline is your superpower in a distracted world.",
+        "author": "Unknown"
+    },
+    {
+        "quote": "Every time you choose discipline, you cast a vote for the person you want to become.",
+        "author": "James Clear"
     }
 ]
 
