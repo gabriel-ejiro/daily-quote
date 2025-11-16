@@ -16,7 +16,6 @@ QUOTABLE_URL = "https://api.quotable.io/random"
 #  FALLBACK QUOTES
 # ---------------------------------------------------------
 FALLBACK_QUOTES = [
-    # --- ORIGINAL 5 ---
     {
         "quote": "Success is the sum of small efforts, repeated day in and day out.",
         "author": "Robert Collier"
@@ -681,11 +680,6 @@ FALLBACK_QUOTES = [
         "author": "Unknown"
     },
     FALLBACK_QUOTES = [
-    # ... your existing quotes ...,
-
-    # -------------------------------------------------------
-    #   100 MORE FALLBACK QUOTES (APPEND THESE)
-    # -------------------------------------------------------
     {
         "quote": "The discipline you build in private will be seen in public.",
         "author": "Unknown"
